@@ -26,14 +26,29 @@
         var ballY;
         var ballSpeedX;
         var ballSpeedY;
-        const BALL_SIZE = 7;
+        const BALL_SIZE = 10;
         var ballColor;
 
         // track
         const TRACK_COLS = 20;
         const TRACK_ROWS = 15;
-        var trackGrid = new Array(TRACK_COLS * TRACK_ROWS); // contains boolean for visibility
-        var trackLeft;
+        var trackGrid = [
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+        ];
         const TRACK_WIDTH = 40;
         const TRACK_HEIGHT = 40;
         const TRACK_GAP = 2;
@@ -60,7 +75,6 @@
         /* INITIALIZATION */
         function initGame() {
             initColors();
-            initTracks();
             initBall();
         }
 
@@ -70,23 +84,11 @@
             trackColor = COLORS[indexColor];
         }
 
-        function initTracks() {
-            trackLeft = 0;
-            for (i = 0; i < TRACK_COLS * TRACK_ROWS; i++) {
-                if (Math.random() > 0.5) {
-                    trackGrid[i] = true;
-                    trackLeft++;
-                } else {
-                    trackGrid[i] = false;
-                };
-            }
-        }
-
         function initBall() {
             ballX = canvas.width / 2;
             ballY = canvas.height / 2;
-            ballSpeedX = 3;
-            ballSpeedY = -3;
+            ballSpeedX = 5;
+            ballSpeedY = -5;
         }
         /* END OF INITIALIZATION */
 
@@ -108,17 +110,6 @@
             if (ballTrackCol >= 0 && ballTrackCol < TRACK_COLS &&
                 ballTrackRow >= 0 && ballTrackRow < TRACK_ROWS &&
                 trackGrid[trackIndexUnderBall]) { // collision happens if track is not hidden
-                // hide the track
-                trackGrid[trackIndexUnderBall] = false;
-                trackLeft--;
-                // randomizeColors();
-                // console.log(trackLeft);
-
-                /* Game Over: finish */
-                if (trackLeft == 0) {
-                    // console.log("Win");
-                    initGame();
-                }
 
                 var previousBallX = ballX - ballSpeedX;
                 var previousBallY = ballY - ballSpeedY;
@@ -155,16 +146,6 @@
                 }
                 // both changes when ball hits the corner => change both speeds
             }
-
-            function randomizeColors() {
-                var oldIndexColor = indexColor;
-                // make sure new color is different than the old one
-                while (indexColor == oldIndexColor) {
-                    indexColor = Math.floor(Math.random() * COLORS.length);
-                }
-                initColors();
-            }
-
         }
         /* END OF COLLISION */
 
@@ -223,7 +204,7 @@
             for (eachRow = 0; eachRow < TRACK_ROWS; eachRow++) {
                 for (eachCol = 0; eachCol < TRACK_COLS; eachCol++) {
                     var indexArray = colRowToIndexArray(eachCol, eachRow);
-                    if (trackGrid[indexArray]) {
+                    if (trackGrid[indexArray]==1) {
                         colorRect(TRACK_WIDTH * eachCol, TRACK_HEIGHT * eachRow, TRACK_WIDTH - TRACK_GAP, TRACK_HEIGHT -
                             TRACK_GAP, trackColor);
                     }
