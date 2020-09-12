@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Justa Race</title>
+</head>
+
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+    <script>
+        // fundamental
+        /** @type {HTMLCanvasElement} */ // declare type in VSCode (for code completion)
+        var canvas;
+        /** @type {CanvasRenderingContext2D} */
+        var canvasContext;
+        const FPS = 30;
+        const BG_COLOR = "black";
+        const COLORS = ["green", "yellow", "red"]; // to randomize element color
+        var indexColor = 0;
+
+        // ball
+        var ballX;
+        var ballY;
+        var ballSpeedX;
+        var ballSpeedY;
+        const BALL_SIZE = 7;
+        var ballColor;
+
+        // track
+        const TRACK_COLS = 20;
+        const TRACK_ROWS = 15;
+        var trackGrid = new Array(TRACK_COLS * TRACK_ROWS); // contains boolean for visibility
+        var trackLeft;
+        const TRACK_WIDTH = 40;
+        const TRACK_HEIGHT = 40;
+        const TRACK_GAP = 2;
+        var trackColor;
+
+        // mouse
+        var mouseX;
+        var mouseY;
+        const TEXT_COLOR = "yellow";
+
+        // setup script
+        window.onload = function () {
+            canvas = document.getElementById("gameCanvas");
+            canvasContext = canvas.getContext("2d");
+
+            initGame();
+
+            setInterval(updateAll, 1000 / FPS); // invoke updateAll() fps times/second
+
+            // events
+            canvas.addEventListener('mousemove', updateMousePos);
+        }
+
+        /* INITIALIZATION */
+        function initGame() {
+            initColors();
+            initTracks();
+            initBall();
+        }
+
+        function initColors() {
+            // indexColor=0;
+            ballColor = COLORS[indexColor];
+            trackColor = COLORS[indexColor];
+        }
+
+        function initTracks() {
+            trackLeft = 0;
+            for (i = 0; i < TRACK_COLS * TRACK_ROWS; i++) {
+                if (Math.random() > 0.5) {
+                    trackGrid[i] = true;
+                    trackLeft++;
+                } else {
+                    trackGrid[i] = false;
+                };
+            }
+        }
+
+        function initBall() {
+            ballX = canvas.width / 2;
+            ballY = canvas.height / 2;
+            ballSpeedX = 3;
+            ballSpeedY = -3;
+        }
+        /* END OF INITIALIZATION */
+
+        function updateAll() {
+            moveAll();
+            drawAll();
+            trackBallCollision();
+        }
+
+        /* COLLISION */
+        function trackBallCollision() {
+            // indicate which col and row of trackGrid[] the ball are in
+            var ballTrackCol = Math.floor(ballX / TRACK_WIDTH);
+            var ballTrackRow = Math.floor(ballY / TRACK_HEIGHT);
+            // convert to index array with col and row
+            var trackIndexUnderBall = colRowToIndexArray(ballTrackCol, ballTrackRow);
+
+            // boundaries of col and row
+            if (ballTrackCol >= 0 && ballTrackCol < TRACK_COLS &&
+                ballTrackRow >= 0 && ballTrackRow < TRACK_ROWS &&
+                trackGrid[trackIndexUnderBall]) { // collision happens if track is not hidden
+                // hide the track
+                trackGrid[trackIndexUnderBall] = false;
+                trackLeft--;
+                // randomizeColors();
+                // console.log(trackLeft);
+
+                /* Game Over: finish */
+                if (trackLeft == 0) {
+                    // console.log("Win");
+                    initGame();
+                }
+
+                var previousBallX = ballX - ballSpeedX;
+                var previousBallY = ballY - ballSpeedY;
+                var previousBallTrackCol = Math.floor(previousBallX / TRACK_WIDTH);
+                var previousBallTrackRow = Math.floor(previousBallY / TRACK_WIDTH);
+
+                var armpitCase = true;
+
+                // column changes when ball hits front of the track
+                if (previousBallTrackCol != ballTrackCol) {
+                    // track right/left to hit track is on the previous column, same row
+                    var adjHorizontalTrackIndex = colRowToIndexArray(previousBallTrackCol, ballTrackRow);
+                    // if the adjacent track not exist, allow ball to bound horizontally
+                    if (!trackGrid[adjHorizontalTrackIndex]) {
+                        ballSpeedX *= -1;
+                        armpitCase = false;
+                    }
+                }
+                // row changes when ball hits side of the track
+                if (previousBallTrackRow != ballTrackRow) {
+                    // track above/below to hit track is on the same column, previous row
+                    var adjVerticalTrackIndex = colRowToIndexArray(ballTrackCol, previousBallTrackRow);
+                    // if the adjacent track not exist, allow ball to bound vertically
+                    if (!trackGrid[adjVerticalTrackIndex]) {
+                        ballSpeedY *= -1;
+                        armpitCase = false;
+                    }
+                }
+
+                // prevent ball go through if armpit case
+                if (armpitCase) {
+                    ballSpeedX *= -1;
+                    ballSpeedY *= -1;
+                }
+                // both changes when ball hits the corner => change both speeds
+            }
+
+            function randomizeColors() {
+                var oldIndexColor = indexColor;
+                // make sure new color is different than the old one
+                while (indexColor == oldIndexColor) {
+                    indexColor = Math.floor(Math.random() * COLORS.length);
+                }
+                initColors();
+            }
+
+        }
+        /* END OF COLLISION */
+
+        /* DRAWING */
+        function drawAll() {
+            // big frame (draw every time to clear screen)
+            colorRect(0, 0, canvas.width, canvas.height, BG_COLOR);
+
+            // ball
+            colorCircle(ballX, ballY, BALL_SIZE, ballColor);
+            // tracks
+            drawTracks();
+            // mouse position
+            colorText(mouseX + ", " + mouseY, mouseX, mouseY, TEXT_COLOR);
+        }
+
+        /* EVENTS */
+        function updateMousePos(event) {
+            //???
+            var rect = canvas.getBoundingClientRect();
+            var root = document.documentElement;
+
+            mouseX = event.clientX - rect.left - root.scrollLeft;
+            mouseY = event.clientY - rect.top - root.scrollTop;
+            // cheat();
+        }
+
+        function cheat() {
+            // cheat for testing: make ball follow the mouse
+            ballX = mouseX;
+            ballY = mouseY;
+            ballSpeedX = 5;
+            ballSpeedY = -5;
+        }
+        /* END OF EVENTS */
+
+        /* DRAWING HELPERS */
+        function colorRect(topX, topY, boxWidth, boxHeight, fillColor) {
+            canvasContext.fillStyle = fillColor;
+            canvasContext.fillRect(topX, topY, boxWidth, boxHeight);
+        }
+
+        function colorCircle(centerX, centerY, radius, fillColor) {
+            canvasContext.fillStyle = fillColor;
+            canvasContext.beginPath();
+            canvasContext.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
+            canvasContext.fill();
+        }
+
+        function colorText(text, textX, textY, fillColor) {
+            canvasContext.fillStyle = fillColor;
+            canvasContext.fillText(text, textX, textY);
+        }
+
+        function drawTracks() {
+            for (eachRow = 0; eachRow < TRACK_ROWS; eachRow++) {
+                for (eachCol = 0; eachCol < TRACK_COLS; eachCol++) {
+                    var indexArray = colRowToIndexArray(eachCol, eachRow);
+                    if (trackGrid[indexArray]) {
+                        colorRect(TRACK_WIDTH * eachCol, TRACK_HEIGHT * eachRow, TRACK_WIDTH - TRACK_GAP, TRACK_HEIGHT -
+                            TRACK_GAP, trackColor);
+                    }
+
+                }
+            }
+        }
+
+        // convert to index of trackGrid[] when know its col and row
+        function colRowToIndexArray(col, row) {
+            return col + row * TRACK_COLS;
+        }
+        /* END OF DRAWING HELPERS */
+
+        /* MOTION */
+        function moveAll() {
+            // update element position
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+            // boundations (collision with big frame)
+            if (ballX < BALL_SIZE && ballSpeedX < 0 || // ball hits left
+                ballX > canvas.width - BALL_SIZE && ballSpeedX > 0) { // ball hits right
+                ballSpeedX *= -1;
+            }
+            if (ballY < BALL_SIZE && ballSpeedY < 0) { // ball hits top
+                ballSpeedY *= -1;
+            }
+            /* Game Over: ball hits bottom */
+            if (ballY > canvas.height - BALL_SIZE) {
+                initGame();
+            }
+        }
+    </script>
+</body>
+
+</html>
