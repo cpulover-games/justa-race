@@ -21,13 +21,15 @@
         const COLORS = ["green", "yellow", "red"]; // to randomize element color
         var indexColor = 0;
 
-        // ball
-        var ballX;
-        var ballY;
-        var ballSpeedX;
-        var ballSpeedY;
+        // car
+        var carPic = document.createElement("img");
+        var carPicLoaded = false;
+        var carX;
+        var carY;
+        var carSpeedX;
+        var carSpeedY;
         const BALL_SIZE = 10;
-        var ballColor;
+        var carColor;
 
         // track
         const TRACK_COLS = 20;
@@ -64,6 +66,12 @@
             canvas = document.getElementById("gameCanvas");
             canvasContext = canvas.getContext("2d");
 
+            // load assets
+            carPic.src = "player1car.png";
+            carPic.onload = function () {
+                carPicLoaded = true;
+            }
+
             initGame();
 
             setInterval(updateAll, 1000 / FPS); // invoke updateAll() fps times/second
@@ -75,24 +83,25 @@
         /* INITIALIZATION */
         function initGame() {
             initColors();
-            initBall();
+            initCar();
         }
 
         function initColors() {
             // indexColor=0;
-            ballColor = COLORS[indexColor];
+            carColor = COLORS[indexColor];
             trackColor = COLORS[indexColor];
         }
 
-        function initBall() {
-            ballSpeedX = 0;
-            ballSpeedY = 0;
+        function initCar() {
+            carSpeedX = 4;
+            carSpeedY = 4;
             for (currentRow = 0; currentRow < TRACK_ROWS; currentRow++) {
                 for (currentCol = 0; currentCol < TRACK_COLS; currentCol++) {
                     var indexArray = colRowToIndexArray(currentCol, currentRow);
                     if (trackGrid[indexArray] == 2) {
-                        ballX = currentCol * TRACK_WIDTH + TRACK_WIDTH / 2;
-                        ballY = currentRow * TRACK_HEIGHT + TRACK_HEIGHT / 2;
+                        trackGrid[indexArray] = 0; // to prevent car from stucking due to collision
+                        carX = currentCol * TRACK_WIDTH + TRACK_WIDTH / 2;
+                        carY = currentRow * TRACK_HEIGHT + TRACK_HEIGHT / 2;
                     }
                 }
             }
@@ -102,56 +111,56 @@
         function updateAll() {
             moveAll();
             drawAll();
-            trackBallCollision();
+            trackCarCollision();
         }
 
         /* COLLISION */
-        function trackBallCollision() {
-            // indicate which col and row of trackGrid[] the ball are in
-            var ballTrackCol = Math.floor(ballX / TRACK_WIDTH);
-            var ballTrackRow = Math.floor(ballY / TRACK_HEIGHT);
+        function trackCarCollision() {
+            // indicate which col and row of trackGrid[] the car are in
+            var carTrackCol = Math.floor(carX / TRACK_WIDTH);
+            var carTrackRow = Math.floor(carY / TRACK_HEIGHT);
             // convert to index array with col and row
-            var trackIndexUnderBall = colRowToIndexArray(ballTrackCol, ballTrackRow);
+            var trackIndexUnderCar = colRowToIndexArray(carTrackCol, carTrackRow);
 
             // boundaries of col and row
-            if (ballTrackCol >= 0 && ballTrackCol < TRACK_COLS &&
-                ballTrackRow >= 0 && ballTrackRow < TRACK_ROWS &&
-                trackGrid[trackIndexUnderBall]) { // collision happens if track is not hidden
+            if (carTrackCol >= 0 && carTrackCol < TRACK_COLS &&
+                carTrackRow >= 0 && carTrackRow < TRACK_ROWS &&
+                trackGrid[trackIndexUnderCar]) { // collision happens if track is not hidden
 
-                var previousBallX = ballX - ballSpeedX;
-                var previousBallY = ballY - ballSpeedY;
-                var previousBallTrackCol = Math.floor(previousBallX / TRACK_WIDTH);
-                var previousBallTrackRow = Math.floor(previousBallY / TRACK_WIDTH);
+                var previousCarX = carX - carSpeedX;
+                var previousCarY = carY - carSpeedY;
+                var previousCarTrackCol = Math.floor(previousCarX / TRACK_WIDTH);
+                var previousCarTrackRow = Math.floor(previousCarY / TRACK_WIDTH);
 
                 var armpitCase = true;
 
-                // column changes when ball hits front of the track
-                if (previousBallTrackCol != ballTrackCol) {
+                // column changes when car hits front of the track
+                if (previousCarTrackCol != carTrackCol) {
                     // track right/left to hit track is on the previous column, same row
-                    var adjHorizontalTrackIndex = colRowToIndexArray(previousBallTrackCol, ballTrackRow);
-                    // if the adjacent track not exist, allow ball to bound horizontally
+                    var adjHorizontalTrackIndex = colRowToIndexArray(previousCarTrackCol, carTrackRow);
+                    // if the adjacent track not exist, allow car to bound horizontally
                     if (!trackGrid[adjHorizontalTrackIndex]) {
-                        ballSpeedX *= -1;
+                        carSpeedX *= -1;
                         armpitCase = false;
                     }
                 }
-                // row changes when ball hits side of the track
-                if (previousBallTrackRow != ballTrackRow) {
+                // row changes when car hits side of the track
+                if (previousCarTrackRow != carTrackRow) {
                     // track above/below to hit track is on the same column, previous row
-                    var adjVerticalTrackIndex = colRowToIndexArray(ballTrackCol, previousBallTrackRow);
-                    // if the adjacent track not exist, allow ball to bound vertically
+                    var adjVerticalTrackIndex = colRowToIndexArray(carTrackCol, previousCarTrackRow);
+                    // if the adjacent track not exist, allow car to bound vertically
                     if (!trackGrid[adjVerticalTrackIndex]) {
-                        ballSpeedY *= -1;
+                        carSpeedY *= -1;
                         armpitCase = false;
                     }
                 }
 
-                // prevent ball go through if armpit case
+                // prevent car go through if armpit case
                 if (armpitCase) {
-                    ballSpeedX *= -1;
-                    ballSpeedY *= -1;
+                    carSpeedX *= -1;
+                    carSpeedY *= -1;
                 }
-                // both changes when ball hits the corner => change both speeds
+                // both changes when car hits the corner => change both speeds
             }
         }
         /* END OF COLLISION */
@@ -161,8 +170,10 @@
             // big frame (draw every time to clear screen)
             colorRect(0, 0, canvas.width, canvas.height, BG_COLOR);
 
-            // ball
-            colorCircle(ballX, ballY, BALL_SIZE, ballColor);
+            // car
+            if (carPicLoaded) {
+                canvasContext.drawImage(carPic, carX - carPic.width / 2, carY - carPic.height / 2);
+            }
             // tracks
             drawTracks();
             // mouse position
@@ -181,11 +192,11 @@
         }
 
         function cheat() {
-            // cheat for testing: make ball follow the mouse
-            ballX = mouseX;
-            ballY = mouseY;
-            ballSpeedX = 5;
-            ballSpeedY = -5;
+            // cheat for testing: make car follow the mouse
+            carX = mouseX;
+            carY = mouseY;
+            carSpeedX = 5;
+            carSpeedY = -5;
         }
         /* END OF EVENTS */
 
@@ -229,18 +240,18 @@
         /* MOTION */
         function moveAll() {
             // update element position
-            ballX += ballSpeedX;
-            ballY += ballSpeedY;
+            carX += carSpeedX;
+            carY += carSpeedY;
             // boundations (collision with big frame)
-            if (ballX < BALL_SIZE && ballSpeedX < 0 || // ball hits left
-                ballX > canvas.width - BALL_SIZE && ballSpeedX > 0) { // ball hits right
-                ballSpeedX *= -1;
+            if (carX < BALL_SIZE && carSpeedX < 0 || // car hits left
+                carX > canvas.width - BALL_SIZE && carSpeedX > 0) { // car hits right
+                carSpeedX *= -1;
             }
-            if (ballY < BALL_SIZE && ballSpeedY < 0) { // ball hits top
-                ballSpeedY *= -1;
+            if (carY < BALL_SIZE && carSpeedY < 0) { // car hits top
+                carSpeedY *= -1;
             }
-            /* Game Over: ball hits bottom */
-            if (ballY > canvas.height - BALL_SIZE) {
+            /* Game Over: car hits bottom */
+            if (carY > canvas.height - BALL_SIZE) {
                 initGame();
             }
         }
