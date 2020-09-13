@@ -28,6 +28,7 @@
         var carY;
         var carSpeedX;
         var carSpeedY;
+        var carAngle;
         const BALL_SIZE = 10;
         var carColor;
 
@@ -95,6 +96,7 @@
         function initCar() {
             carSpeedX = 4;
             carSpeedY = 4;
+            carAngle = 0;
             for (currentRow = 0; currentRow < TRACK_ROWS; currentRow++) {
                 for (currentCol = 0; currentCol < TRACK_COLS; currentCol++) {
                     var indexArray = colRowToIndexArray(currentCol, currentRow);
@@ -170,12 +172,13 @@
             // big frame (draw every time to clear screen)
             colorRect(0, 0, canvas.width, canvas.height, BG_COLOR);
 
-            // car
-            if (carPicLoaded) {
-                canvasContext.drawImage(carPic, carX - carPic.width / 2, carY - carPic.height / 2);
-            }
+            
             // tracks
             drawTracks();
+            // car
+            if (carPicLoaded) {
+                drawBitmapCenteredWithRotation(carPic, carX, carY, carAngle);
+            }
             // mouse position
             colorText(mouseX + ", " + mouseY, mouseX, mouseY, TEXT_COLOR);
         }
@@ -231,6 +234,20 @@
             }
         }
 
+        function drawBitmapCenteredWithRotation(bitmap, atX, atY,
+        angle) { // graphical operations excute by reversed order
+            // 1: sets us up so we can forget these operations
+            canvasContext.save();
+            // 4: slide its center to atX, atY
+            canvasContext.translate(atX, atY);
+            // 3: rotate center around center
+            canvasContext.rotate(angle);
+            // 2: draw image at center
+            canvasContext.drawImage(bitmap, -bitmap.width / 2, -bitmap.height / 2);
+            // 5: forget everything since save
+            canvasContext.restore();
+        }
+
         // convert to index of trackGrid[] when know its col and row
         function colRowToIndexArray(col, row) {
             return col + row * TRACK_COLS;
@@ -240,8 +257,7 @@
         /* MOTION */
         function moveAll() {
             // update element position
-            carX += carSpeedX;
-            carY += carSpeedY;
+            carAngle += 0.05;
             // boundations (collision with big frame)
             if (carX < BALL_SIZE && carSpeedX < 0 || // car hits left
                 carX > canvas.width - BALL_SIZE && carSpeedX > 0) { // car hits right
