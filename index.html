@@ -26,8 +26,7 @@
         var carPicLoaded = false;
         var carX;
         var carY;
-        var carSpeedX;
-        var carSpeedY;
+        var carSpeed;
         var carAngle;
         const BALL_SIZE = 10;
         var carColor;
@@ -94,8 +93,7 @@
         }
 
         function initCar() {
-            carSpeedX = 4;
-            carSpeedY = 4;
+            carSpeed = 4;
             carAngle = 0;
             for (currentRow = 0; currentRow < TRACK_ROWS; currentRow++) {
                 for (currentCol = 0; currentCol < TRACK_COLS; currentCol++) {
@@ -128,41 +126,7 @@
             if (carTrackCol >= 0 && carTrackCol < TRACK_COLS &&
                 carTrackRow >= 0 && carTrackRow < TRACK_ROWS &&
                 trackGrid[trackIndexUnderCar]) { // collision happens if track is not hidden
-
-                var previousCarX = carX - carSpeedX;
-                var previousCarY = carY - carSpeedY;
-                var previousCarTrackCol = Math.floor(previousCarX / TRACK_WIDTH);
-                var previousCarTrackRow = Math.floor(previousCarY / TRACK_WIDTH);
-
-                var armpitCase = true;
-
-                // column changes when car hits front of the track
-                if (previousCarTrackCol != carTrackCol) {
-                    // track right/left to hit track is on the previous column, same row
-                    var adjHorizontalTrackIndex = colRowToIndexArray(previousCarTrackCol, carTrackRow);
-                    // if the adjacent track not exist, allow car to bound horizontally
-                    if (!trackGrid[adjHorizontalTrackIndex]) {
-                        carSpeedX *= -1;
-                        armpitCase = false;
-                    }
-                }
-                // row changes when car hits side of the track
-                if (previousCarTrackRow != carTrackRow) {
-                    // track above/below to hit track is on the same column, previous row
-                    var adjVerticalTrackIndex = colRowToIndexArray(carTrackCol, previousCarTrackRow);
-                    // if the adjacent track not exist, allow car to bound vertically
-                    if (!trackGrid[adjVerticalTrackIndex]) {
-                        carSpeedY *= -1;
-                        armpitCase = false;
-                    }
-                }
-
-                // prevent car go through if armpit case
-                if (armpitCase) {
-                    carSpeedX *= -1;
-                    carSpeedY *= -1;
-                }
-                // both changes when car hits the corner => change both speeds
+                carSpeed *= -1;
             }
         }
         /* END OF COLLISION */
@@ -172,7 +136,7 @@
             // big frame (draw every time to clear screen)
             colorRect(0, 0, canvas.width, canvas.height, BG_COLOR);
 
-            
+
             // tracks
             drawTracks();
             // car
@@ -198,8 +162,7 @@
             // cheat for testing: make car follow the mouse
             carX = mouseX;
             carY = mouseY;
-            carSpeedX = 5;
-            carSpeedY = -5;
+            carSpeed = 4;
         }
         /* END OF EVENTS */
 
@@ -235,12 +198,12 @@
         }
 
         function drawBitmapCenteredWithRotation(bitmap, atX, atY,
-        angle) { // graphical operations excute by reversed order
+            angle) { // graphical operations excute by reversed order
             // 1: sets us up so we can forget these operations
             canvasContext.save();
             // 4: slide its center to atX, atY
             canvasContext.translate(atX, atY);
-            // 3: rotate center around center
+            // 3: rotate center around center (radian)
             canvasContext.rotate(angle);
             // 2: draw image at center
             canvasContext.drawImage(bitmap, -bitmap.width / 2, -bitmap.height / 2);
@@ -258,18 +221,8 @@
         function moveAll() {
             // update element position
             carAngle += 0.05;
-            // boundations (collision with big frame)
-            if (carX < BALL_SIZE && carSpeedX < 0 || // car hits left
-                carX > canvas.width - BALL_SIZE && carSpeedX > 0) { // car hits right
-                carSpeedX *= -1;
-            }
-            if (carY < BALL_SIZE && carSpeedY < 0) { // car hits top
-                carSpeedY *= -1;
-            }
-            /* Game Over: car hits bottom */
-            if (carY > canvas.height - BALL_SIZE) {
-                initGame();
-            }
+            carX += Math.cos(carAngle) * carSpeed;
+            carY += Math.sin(carAngle) * carSpeed;
         }
     </script>
 </body>
