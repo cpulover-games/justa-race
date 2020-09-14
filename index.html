@@ -108,7 +108,7 @@
 
         function initCar() {
             carSpeed = 0;
-            carAngle = 0;
+            carAngle = -Math.PI / 2;
             for (currentRow = 0; currentRow < TRACK_ROWS; currentRow++) {
                 for (currentCol = 0; currentCol < TRACK_COLS; currentCol++) {
                     var indexArray = colRowToIndexArray(currentCol, currentRow);
@@ -140,7 +140,12 @@
             if (carTrackCol >= 0 && carTrackCol < TRACK_COLS &&
                 carTrackRow >= 0 && carTrackRow < TRACK_ROWS &&
                 trackGrid[trackIndexUnderCar]) { // collision happens if track is not hidden
-                carSpeed *= -1;
+                // first undo car's most recent motion so that its center no longer overlap the wall
+                // which makes it stuck
+                carX -= Math.cos(carAngle) * carSpeed;
+                carY -= Math.sin(carAngle) * carSpeed;
+                // then bound car with decreased speed
+                carSpeed *= -0.5;
             }
         }
         /* END OF COLLISION */
@@ -260,11 +265,12 @@
         /* MOTION */
         function moveAll() {
             // car
+            carSpeed *= 0.98; // friction
             if (keyHeldGas) {
-                carSpeed += 0.1;
+                carSpeed += 0.2;
             }
             if (keyHeldReverse) {
-                carSpeed -= 0.1;
+                carSpeed -= 0.2;
             }
             if (keyTurnLeft) {
                 carAngle -= 0.1;
