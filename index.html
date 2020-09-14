@@ -21,6 +21,23 @@
         const COLORS = ["green", "yellow", "red"]; // to randomize element color
         var indexColor = 0;
 
+        // key codes
+        const KEY_LEFT_ARROW = 37;
+        const KEY_RIGHT_ARROW = 39;
+        const KEY_UP_ARROW = 38;
+        const KEY_DOWN_ARROW = 40;
+
+        // car control
+        var keyHeldGas = false;
+        var keyHeldReverse = false;
+        var keyTurnLeft = false;
+        var keyTurnRight = false;
+
+        // mouse
+        var mouseX;
+        var mouseY;
+        const TEXT_COLOR = "yellow";
+
         // car
         var carPic = document.createElement("img");
         var carPicLoaded = false;
@@ -56,11 +73,6 @@
         const TRACK_GAP = 2;
         var trackColor;
 
-        // mouse
-        var mouseX;
-        var mouseY;
-        const TEXT_COLOR = "yellow";
-
         // setup script
         window.onload = function () {
             canvas = document.getElementById("gameCanvas");
@@ -78,6 +90,8 @@
 
             // events
             canvas.addEventListener('mousemove', updateMousePos);
+            document.addEventListener('keydown', keyPressed);
+            document.addEventListener('keyup', keyReleased);
         }
 
         /* INITIALIZATION */
@@ -93,7 +107,7 @@
         }
 
         function initCar() {
-            carSpeed = 4;
+            carSpeed = 0;
             carAngle = 0;
             for (currentRow = 0; currentRow < TRACK_ROWS; currentRow++) {
                 for (currentCol = 0; currentCol < TRACK_COLS; currentCol++) {
@@ -158,6 +172,32 @@
             // cheat();
         }
 
+        function keyPressed(event) {
+            event.preventDefault();
+            if (event.keyCode == KEY_UP_ARROW) {
+                keyHeldGas = true;
+            } else if (event.keyCode == KEY_DOWN_ARROW) {
+                keyHeldReverse = true;
+            } else if (event.keyCode == KEY_LEFT_ARROW) {
+                keyTurnLeft = true;
+            } else if (event.keyCode == KEY_RIGHT_ARROW) {
+                keyTurnRight = true;
+            }
+        }
+
+        function keyReleased(event) {
+            event.preventDefault();
+            if (event.keyCode == KEY_UP_ARROW) {
+                keyHeldGas = false;
+            } else if (event.keyCode == KEY_DOWN_ARROW) {
+                keyHeldReverse = false;
+            } else if (event.keyCode == KEY_LEFT_ARROW) {
+                keyTurnLeft = false;
+            } else if (event.keyCode == KEY_RIGHT_ARROW) {
+                keyTurnRight = false;
+            }
+        }
+
         function cheat() {
             // cheat for testing: make car follow the mouse
             carX = mouseX;
@@ -219,8 +259,19 @@
 
         /* MOTION */
         function moveAll() {
-            // update element position
-            carAngle += 0.05;
+            // car
+            if (keyHeldGas) {
+                carSpeed += 0.1;
+            }
+            if (keyHeldReverse) {
+                carSpeed -= 0.1;
+            }
+            if (keyTurnLeft) {
+                carAngle -= 0.1;
+            }
+            if (keyTurnRight) {
+                carAngle += 0.1;
+            }
             carX += Math.cos(carAngle) * carSpeed;
             carY += Math.sin(carAngle) * carSpeed;
         }
