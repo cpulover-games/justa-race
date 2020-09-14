@@ -9,14 +9,15 @@ const BG_COLOR = "black";
 window.onload = function () {
     canvas = document.getElementById("gameCanvas");
     canvasContext = canvas.getContext("2d");
-    
-    loadElements();
+
+    loadAssets();
     initGame();
     setInterval(updateAll, 1000 / FPS); // invoke updateAll() fps times/second
     setupEvents();
 }
 
-function loadElements() {
+function loadAssets() {
+    loadTrackImages();
     loadCarImage();
 }
 
@@ -31,15 +32,9 @@ function updateAll() {
 }
 
 function drawAll() {
-    clearScreen();
     drawTracks();
     drawCar();
     drawMousePos();
-}
-
-function clearScreen(){
- // big frame (draw every time to clear screen)
- colorRect(0, 0, canvas.width, canvas.height, BG_COLOR);
 }
 
 function moveAll() {
