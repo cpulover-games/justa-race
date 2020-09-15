@@ -12,7 +12,7 @@ function trackCarCollision() {
     // boundaries of col and row
     if (carTrackCol >= 0 && carTrackCol < TRACK_COLS &&
         carTrackRow >= 0 && carTrackRow < TRACK_ROWS &&
-        trackGrid[trackIndexUnderCar] == TRACK_WALL) { // collision happens if wall available
+        trackGrid[trackIndexUnderCar] != TRACK_ROAD) { // collision happens if obtacles (wall, tree... not road) available
         // first undo car's most recent motion so that its center no longer overlap the wall
         // which makes it stuck
         carX -= Math.cos(carAngle) * carSpeed;

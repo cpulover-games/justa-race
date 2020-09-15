@@ -23,7 +23,7 @@ function initCar() {
     for (currentRow = 0; currentRow < TRACK_ROWS; currentRow++) {
         for (currentCol = 0; currentCol < TRACK_COLS; currentCol++) {
             var indexArray = colRowToIndexArray(currentCol, currentRow);
-            if (trackGrid[indexArray] == TRACK_CAR) {
+            if (trackGrid[indexArray] == TRACK_PLAYER_START) {
                 carX = currentCol * TRACK_WIDTH + TRACK_WIDTH / 2;
                 carY = currentRow * TRACK_HEIGHT + TRACK_HEIGHT / 2;
             }
