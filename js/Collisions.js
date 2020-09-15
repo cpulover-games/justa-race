@@ -4,7 +4,7 @@ function setupCollisions() {
 
 function trackCarCollision() {
     for (var car of cars) {
-        // indicate which col and row of trackGrid[] the car are in
+        // indicate which col and row of current level grid the car are in
         var carTrackCol = Math.floor(car.x / TRACK_WIDTH);
         var carTrackRow = Math.floor(car.y / TRACK_HEIGHT);
         // convert to index array with col and row
@@ -13,7 +13,7 @@ function trackCarCollision() {
         // boundaries of col and row {?}
         if (carTrackCol >= 0 && carTrackCol < TRACK_COLS &&
             carTrackRow >= 0 && carTrackRow < TRACK_ROWS) {
-            var trackUnderCar = trackGrid[trackIndexUnderCar];
+            var trackUnderCar = levels[currentLevelIndex][trackIndexUnderCar];
             switch (trackUnderCar) {
                 // obtacle cases
                 case TRACK_WALL:
@@ -30,6 +30,7 @@ function trackCarCollision() {
                 // Game over: reach the goal
                 case TRACK_GOAL:
                     console.log(car.name + " won!");
+                    currentLevelIndex++;
                     initGame();
                     break;
             }

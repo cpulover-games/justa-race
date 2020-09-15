@@ -29,7 +29,7 @@ function drawBitmapCenteredWithRotation(bitmap, atX, atY,
     canvasContext.restore();
 }
 
-// convert to index of trackGrid[] when know its col and row
+// convert to index of current level grid array when know its col and row
 function colRowToIndexArray(col, row) {
     return col + row * TRACK_COLS;
 }

@@ -44,7 +44,7 @@ function Car() {
         for (currentRow = 0; currentRow < TRACK_ROWS; currentRow++) {
             for (currentCol = 0; currentCol < TRACK_COLS; currentCol++) {
                 var indexArray = colRowToIndexArray(currentCol, currentRow);
-                if (trackGrid[indexArray] == this.startPosition) {
+                if (levels[currentLevelIndex][indexArray] == this.startPosition) {
                     this.x = currentCol * TRACK_WIDTH + TRACK_WIDTH / 2;
                     this.y = currentRow * TRACK_HEIGHT + TRACK_HEIGHT / 2;
                     // return;

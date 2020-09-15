@@ -4,6 +4,7 @@ var canvas;
 var canvasContext;
 const FPS = 60;
 
+var currentLevelIndex=0;
 var blueCar = new Car();
 var greenCar = new Car();
 var cars = [blueCar, greenCar];
