@@ -4,6 +4,9 @@ var canvas;
 var canvasContext;
 const FPS = 60;
 
+var blueCar=new Car();
+var carList=[blueCar];
+
 // setup script
 window.onload = function () {
     canvas = document.getElementById("gameCanvas");
@@ -25,7 +28,7 @@ function loadingScreen() {
 }
 
 function initGame() {
-    initCar();
+    blueCar.init();
 }
 
 function updateAll() {
@@ -36,10 +39,10 @@ function updateAll() {
 
 function drawAll() {
     drawTracks();
-    drawCar();
+    blueCar.draw();
     drawMousePos();
 }
 
 function moveAll() {
-    moveCar();
+    blueCar.move();
 }

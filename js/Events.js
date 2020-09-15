@@ -11,8 +11,8 @@ const TEXT_COLOR = "yellow";
 
 function setupEvents(){
     canvas.addEventListener('mousemove', updateMousePos);
-    document.addEventListener('keydown', keyPressed);
-    document.addEventListener('keyup', keyReleased);
+    document.addEventListener('keydown', keyPressedBlueCar);
+    document.addEventListener('keyup', keyReleasedBlueCar);
 }
 
 function updateMousePos(event) {
@@ -27,28 +27,28 @@ function drawMousePos(){
     colorText(mouseX + ", " + mouseY, mouseX, mouseY, TEXT_COLOR);
 }
 
-function keyPressed(event) {
+function keyPressedBlueCar(event) {
     event.preventDefault();
     if (event.keyCode == KEY_UP_ARROW) {
-        keyHeldGas = true;
+        blueCar.keyHeldGas = true;
     } else if (event.keyCode == KEY_DOWN_ARROW) {
-        keyHeldReverse = true;
+        blueCar.keyHeldReverse = true;
     } else if (event.keyCode == KEY_LEFT_ARROW) {
-        keyTurnLeft = true;
+        blueCar.keyTurnLeft = true;
     } else if (event.keyCode == KEY_RIGHT_ARROW) {
-        keyTurnRight = true;
+        blueCar.keyTurnRight = true;
     }
 }
 
-function keyReleased(event) {
+function keyReleasedBlueCar(event) {
     event.preventDefault();
     if (event.keyCode == KEY_UP_ARROW) {
-        keyHeldGas = false;
+        blueCar.keyHeldGas = false;
     } else if (event.keyCode == KEY_DOWN_ARROW) {
-        keyHeldReverse = false;
+        blueCar.keyHeldReverse = false;
     } else if (event.keyCode == KEY_LEFT_ARROW) {
-        keyTurnLeft = false;
+        blueCar.keyTurnLeft = false;
     } else if (event.keyCode == KEY_RIGHT_ARROW) {
-        keyTurnRight = false;
+        blueCar.keyTurnRight = false;
     }
 }
