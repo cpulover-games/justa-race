@@ -12,6 +12,7 @@ const CAR_FRICTION = 0.95; // reduce speed over time
 const CAR_DRIVE_POWER = 0.2; // gas power
 const CAR_REVERSE_POWER = 0.2; // go backward
 const CAR_TURN_RATE = 0.05; // turn left and right
+const MIN_SPEED_TO_TURN = 0.4; // prevent turning while car not moving
 
 function drawCar() {
     drawBitmapCenteredWithRotation(carPic, carX, carY, carAngle);
@@ -39,11 +40,13 @@ function moveCar() {
     if (keyHeldReverse) {
         carSpeed -= CAR_REVERSE_POWER;
     }
-    if (keyTurnLeft) {
-        carAngle -= CAR_TURN_RATE;
-    }
-    if (keyTurnRight) {
-        carAngle += CAR_TURN_RATE;
+    if (Math.abs(carSpeed) > MIN_SPEED_TO_TURN) {
+        if (keyTurnLeft) {
+            carAngle -= CAR_TURN_RATE;
+        }
+        if (keyTurnRight) {
+            carAngle += CAR_TURN_RATE;
+        }
     }
     carX += Math.cos(carAngle) * carSpeed;
     carY += Math.sin(carAngle) * carSpeed;
