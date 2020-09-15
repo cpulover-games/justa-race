@@ -10,15 +10,13 @@ window.onload = function () {
     canvas = document.getElementById("gameCanvas");
     canvasContext = canvas.getContext("2d");
 
-    loadAssets();
-    initGame();
-    setInterval(updateAll, 1000 / FPS); // invoke updateAll() fps times/second
-    setupEvents();
-}
-
-function loadAssets() {
-    loadTrackImages();
-    loadCarImage();
+    if (loadAssets()) {
+        initGame();
+        setInterval(updateAll, 1000 / FPS); // invoke updateAll() fps times/second
+        setupEvents();
+    } else {
+        console.log("Could not load assets!");
+    }
 }
 
 function initGame() {
@@ -38,5 +36,5 @@ function drawAll() {
 }
 
 function moveAll() {
-   moveCar();
+    moveCar();
 }

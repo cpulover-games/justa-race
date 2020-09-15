@@ -1,5 +1,3 @@
-var carPic = document.createElement("img");
-var carPicLoaded = false;
 var carX;
 var carY;
 var carSpeed;
@@ -15,17 +13,8 @@ const CAR_DRIVE_POWER = 0.3; // gas power
 const CAR_REVERSE_POWER = 0.3; // go backward
 const CAR_TURN_RATE = 0.2; // turn left and right
 
-function loadCarImage(){    
-    carPic.src = "player1car.png";
-    carPic.onload = function () {
-        carPicLoaded = true;
-    }
-}
-
-function drawCar(){
-      if (carPicLoaded) {
-        drawBitmapCenteredWithRotation(carPic, carX, carY, carAngle);
-    }
+function drawCar() {
+    drawBitmapCenteredWithRotation(carPic, carX, carY, carAngle);
 }
 
 function initCar() {
@@ -42,20 +31,20 @@ function initCar() {
     }
 }
 
-function moveCar(){
-     carSpeed *= CAR_FRICTION;
-     if (keyHeldGas) {
-         carSpeed += CAR_DRIVE_POWER;
-     }
-     if (keyHeldReverse) {
-         carSpeed -= CAR_REVERSE_POWER;
-     }
-     if (keyTurnLeft) {
-         carAngle -= CAR_TURN_RATE;
-     }
-     if (keyTurnRight) {
-         carAngle += CAR_TURN_RATE;
-     }
-     carX += Math.cos(carAngle) * carSpeed;
-     carY += Math.sin(carAngle) * carSpeed;
+function moveCar() {
+    carSpeed *= CAR_FRICTION;
+    if (keyHeldGas) {
+        carSpeed += CAR_DRIVE_POWER;
+    }
+    if (keyHeldReverse) {
+        carSpeed -= CAR_REVERSE_POWER;
+    }
+    if (keyTurnLeft) {
+        carAngle -= CAR_TURN_RATE;
+    }
+    if (keyTurnRight) {
+        carAngle += CAR_TURN_RATE;
+    }
+    carX += Math.cos(carAngle) * carSpeed;
+    carY += Math.sin(carAngle) * carSpeed;
 }

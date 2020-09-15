@@ -22,13 +22,7 @@ const TRACK_WALL = 1;
 const TRACK_CAR = 2;
 const TRACK_WIDTH = 40;
 const TRACK_HEIGHT = 40;
-var roadPic = document.createElement("img");
-var wallPic = document.createElement("img");
 
-function loadTrackImages() {
-    roadPic.src = "track_road.png";
-    wallPic.src = "track_wall.png";
-}
 
 function drawTracks() {
     for (currentRow = 0; currentRow < TRACK_ROWS; currentRow++) {

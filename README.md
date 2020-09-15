@@ -4,7 +4,7 @@
 ```
 <canvas id="gameCanvas" height="500" width="500"></canvas>
 ```
-   - Include all JS files: CommonGraphics -> Game elements -> Events -> Collisions -> Main
+   - Include all JS scripts: Assets -> CommonGraphics -> Game elements -> Events -> Collisions -> Main
 
 2. Main script
    - Declare global variables and constants (for convention): canvas, canvas context, FPS, background color, etc.
@@ -19,7 +19,6 @@
      - Mouse events for canvas
      - Keyboard events for HTML document
    - Set interval for motion, drawing and collision code: ```setInterval(updateFunction, 1000 / fps)```
-     - Draw big frame (to clear screen and create effect of animation)
      - Motion and drawing code for game elements
      - Setup collisions
 3. Game elements [Car-Track]
@@ -35,7 +34,8 @@
    - Compare coordinates (collision happens when element coordinates overlap)
    - Update speeds, states when collision
 5. Event code [Events]
-6. Game over and game restart containing init code
+6. Assets loading [Assets]
+7. Game over and game restart containing init code
 
 # Notes and Tips
 - [Event] Use preventDefault() to prevent scrolling page in ```keydown``` event
