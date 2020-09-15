@@ -41,7 +41,7 @@
 # Notes and Tips
 - [Event] Use preventDefault() to prevent scrolling page in ```keydown``` event
 - [Refactor] Create drawing helpers (this utility file could be used for many projects) [CommonGraphics]
-
+- [Event] Get JS key codes from this [link](https://keycode.info/)
 
 
 

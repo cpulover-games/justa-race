@@ -1,13 +1,18 @@
-var carPic = document.createElement("img");
+var car1Pic = document.createElement("img");
+var car2Pic = document.createElement("img");
 var roadPic = document.createElement("img");
 var wallPic = document.createElement("img");
 var flagPic = document.createElement("img");
 var goalPic = document.createElement("img");
 var treePic = document.createElement("img");
 
-var picList = [{
-        varName: carPic,
+var pics = [{
+        varName: car1Pic,
         file: "player1car.png"
+    },
+    {
+        varName: car2Pic,
+        file: "player2car.png"
     },
     {
         varName: roadPic,
@@ -30,14 +35,14 @@ var picList = [{
         file: "track_tree.png"
     },
 ];
-var IMG_FOLDER_PATH="assets/images/";
+var IMG_FOLDER_PATH = "assets/images/";
 var picToLoad; // count remaining pics to load
 
 // return true if finish loading all assets (picToLoad=0)
 function loadAssets() {
-    picToLoad = picList.length;
-    for (i = 0; i < picList.length; i++) {
-        picList[i].varName.src = IMG_FOLDER_PATH + picList[i].file;
+    picToLoad = pics.length;
+    for (var pic of pics) {
+        pic.varName.src = IMG_FOLDER_PATH + pic.file;
         picToLoad--;
     }
 

@@ -5,30 +5,47 @@ const CAR_TURN_RATE = 0.05; // turn left and right
 const MIN_SPEED_TO_TURN = 0.4; // prevent turning while car not moving
 
 function Car() {
-    var x;
-    var y;
-    var speed;
-    var angle;
+    this.x;
+    this.y;
+    this.speed;
+    this.angle;
+    this.pic;
+    this.startPosision;
 
     // car control
-    var keyHeldGas = false;
-    var keyHeldReverse = false;
-    var keyTurnLeft = false;
-    var keyTurnRight = false;
+    this.keyGas;
+    this.keyReverse;
+    this.keyLeft;
+    this.keyRight;
+    this.holdingGas = false;
+    this.holdReverse = false;
+    this.turningLeft = false;
+    this.turningRight = false;
 
-    this.draw = function () {
-        drawBitmapCenteredWithRotation(carPic, this.x, this.y, this.angle);
+    // group setter
+    this.setupInput = function (keyGas, keyReverse, keyLeft, keyRight) {
+        this.keyGas = keyGas;
+        this.keyReverse = keyReverse;
+        this.keyLeft = keyLeft;
+        this.keyRight = keyRight;
     }
 
-    this.init = function () {
+    this.draw = function () {
+        drawBitmapCenteredWithRotation(this.pic, this.x, this.y, this.angle);
+    }
+
+    this.init = function (carPic, startPosision) {
+        this.pic = carPic;
+        this.startPosision = startPosision;
         this.speed = 0;
         this.angle = -Math.PI / 2;
         for (currentRow = 0; currentRow < TRACK_ROWS; currentRow++) {
             for (currentCol = 0; currentCol < TRACK_COLS; currentCol++) {
                 var indexArray = colRowToIndexArray(currentCol, currentRow);
-                if (trackGrid[indexArray] == TRACK_PLAYER_START) {
+                if (trackGrid[indexArray] == this.startPosision) {
                     this.x = currentCol * TRACK_WIDTH + TRACK_WIDTH / 2;
                     this.y = currentRow * TRACK_HEIGHT + TRACK_HEIGHT / 2;
+                    // return;
                 }
             }
         }
@@ -36,17 +53,17 @@ function Car() {
 
     this.move = function () {
         this.speed *= CAR_FRICTION;
-        if (this.keyHeldGas) {
+        if (this.holdingGas) {
             this.speed += CAR_DRIVE_POWER;
         }
-        if (this.keyHeldReverse) {
+        if (this.holdingReverse) {
             this.speed -= CAR_REVERSE_POWER;
         }
         if (Math.abs(this.speed) > MIN_SPEED_TO_TURN) {
-            if (this.keyTurnLeft) {
+            if (this.turningLeft) {
                 this.angle -= CAR_TURN_RATE;
             }
-            if (this.keyTurnRight) {
+            if (this.turningRight) {
                 this.angle += CAR_TURN_RATE;
             }
         }
