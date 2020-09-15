@@ -9,7 +9,7 @@ var trackGrid = [
     1, 0, 0, 1, 1, 0, 0, 1, 4, 4, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1,
     1, 0, 0, 1, 0, 0, 0, 0, 1, 4, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
     1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 5, 0, 0, 1, 0, 0, 1,
-    1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
+    1, 6, 6, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
     1, 0, 0, 1, 0, 0, 5, 0, 0, 0, 5, 0, 0, 1, 0, 0, 1, 0, 0, 1,
     1, 2, 3, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 5, 0, 0, 1,
     1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1,
@@ -35,17 +35,12 @@ function drawTracks() {
             var useImg;
             switch (trackGrid[indexArray]) {
                 case TRACK_ROAD:
+                case TRACK_PLAYER1_START: // draw road under player start positions too
+                case TRACK_PLAYER2_START:
                     useImg = roadPic;
                     break;
                 case TRACK_WALL:
                     useImg = wallPic;
-                    break;
-                case TRACK_PLAYER1_START:
-                case TRACK_PLAYER2_START:
-                    // draw road under player start position too
-                    useImg = roadPic;
-                    // and turn it to road for correct collision
-                    trackGrid[indexArray] = TRACK_ROAD;
                     break;
                 case TRACK_GOAL:
                     useImg = goalPic;
@@ -58,8 +53,6 @@ function drawTracks() {
                     break;
             }
             canvasContext.drawImage(useImg, TRACK_WIDTH * currentCol, TRACK_HEIGHT * currentRow);
-
-
         }
     }
 }

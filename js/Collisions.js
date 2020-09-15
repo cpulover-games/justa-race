@@ -10,16 +10,29 @@ function trackCarCollision() {
         // convert to index array with col and row
         var trackIndexUnderCar = colRowToIndexArray(carTrackCol, carTrackRow);
 
-        // boundaries of col and row
+        // boundaries of col and row {?}
         if (carTrackCol >= 0 && carTrackCol < TRACK_COLS &&
-            carTrackRow >= 0 && carTrackRow < TRACK_ROWS &&
-            trackGrid[trackIndexUnderCar] != TRACK_ROAD) { // collision happens if obtacles (wall, tree... not road) available
-            // first undo car's most recent motion so that its center no longer overlap the wall
-            // which makes it stuck
-            car.x -= Math.cos(car.angle) * car.speed;
-            car.y -= Math.sin(car.angle) * car.speed;
-            // then bound car with decreased speed
-            car.speed *= -0.5;
+            carTrackRow >= 0 && carTrackRow < TRACK_ROWS) {
+            var trackUnderCar = trackGrid[trackIndexUnderCar];
+            switch (trackUnderCar) {
+                // obtacle cases
+                case TRACK_WALL:
+                case TRACK_FLAG:
+                case TRACK_TREE:
+                    // first undo car's most recent motion so that its center no longer overlap the wall
+                    // which makes it stuck
+                    car.x -= Math.cos(car.angle) * car.speed;
+                    car.y -= Math.sin(car.angle) * car.speed;
+                    // then bound car with decreased speed
+                    car.speed *= -0.5;
+                    break;
+
+                // Game over: reach the goal
+                case TRACK_GOAL:
+                    console.log(car.name + " won!");
+                    initGame();
+                    break;
+            }
         }
     }
 }

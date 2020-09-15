@@ -10,7 +10,8 @@ function Car() {
     this.speed;
     this.angle;
     this.pic;
-    this.startPosision;
+    this.startPosition;
+    this.name;
 
     // car control
     this.keyGas;
@@ -34,15 +35,16 @@ function Car() {
         drawBitmapCenteredWithRotation(this.pic, this.x, this.y, this.angle);
     }
 
-    this.init = function (carPic, startPosision) {
+    this.init = function (carPic, startPosition, name) {
         this.pic = carPic;
-        this.startPosision = startPosision;
+        this.startPosition = startPosition;
+        this.name=name;
         this.speed = 0;
         this.angle = -Math.PI / 2;
         for (currentRow = 0; currentRow < TRACK_ROWS; currentRow++) {
             for (currentCol = 0; currentCol < TRACK_COLS; currentCol++) {
                 var indexArray = colRowToIndexArray(currentCol, currentRow);
-                if (trackGrid[indexArray] == this.startPosision) {
+                if (trackGrid[indexArray] == this.startPosition) {
                     this.x = currentCol * TRACK_WIDTH + TRACK_WIDTH / 2;
                     this.y = currentRow * TRACK_HEIGHT + TRACK_HEIGHT / 2;
                     // return;

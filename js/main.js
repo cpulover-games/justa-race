@@ -29,8 +29,8 @@ function loadingScreen() {
 }
 
 function initGame() {
-    blueCar.init(car1Pic, TRACK_PLAYER1_START);
-    greenCar.init(car2Pic, TRACK_PLAYER2_START);
+    blueCar.init(car1Pic, TRACK_PLAYER1_START, "Blue car");
+    greenCar.init(car2Pic, TRACK_PLAYER2_START, "Green car");
 }
 
 function updateAll() {
