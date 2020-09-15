@@ -11,7 +11,7 @@ var keyTurnRight = false;
 const CAR_FRICTION = 0.95; // reduce speed over time
 const CAR_DRIVE_POWER = 0.2; // gas power
 const CAR_REVERSE_POWER = 0.2; // go backward
-const CAR_TURN_RATE = 0.1; // turn left and right
+const CAR_TURN_RATE = 0.05; // turn left and right
 
 function drawCar() {
     drawBitmapCenteredWithRotation(carPic, carX, carY, carAngle);

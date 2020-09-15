@@ -15,13 +15,14 @@ var picList = [{
         file: "track_wall.png"
     }
 ];
+var IMG_FOLDER_PATH="assets/images/";
 var picToLoad; // count remaining pics to load
 
 // return true if finish loading all assets (picToLoad=0)
 function loadAssets() {
     picToLoad = picList.length;
     for (i = 0; i < picList.length; i++) {
-        picList[i].varName.src = picList[i].file;
+        picList[i].varName.src = IMG_FOLDER_PATH + picList[i].file;
         picToLoad--;
     }
 
