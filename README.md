@@ -11,6 +11,7 @@
    - Use ```window.onload``` function (to load script only after HTML page finishes loading)
    - Get canvas: ```document.getElementById("gameCanvas")``` (to get canvas.width/height, add  events)
    - Get canvas context: ```canvasContext = canvas.getContext("2d")``` (for drawing)
+   - (Optional) Add loading screen
    - Load assets for game elements
    - Init code
      - Initialize global states of game 

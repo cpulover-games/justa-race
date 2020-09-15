@@ -22,7 +22,6 @@ function loadAssets() {
     picToLoad = picList.length;
     for (i = 0; i < picList.length; i++) {
         picList[i].varName.src = picList[i].file;
-        console.log(picList[i].varName);
         picToLoad--;
     }
 
