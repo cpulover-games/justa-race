@@ -13,11 +13,12 @@ function Car() {
     this.startPosition;
     this.name;
 
-    // car control
+    // key controls
     this.keyGas;
     this.keyReverse;
     this.keyLeft;
     this.keyRight;
+    // key control states
     this.holdingGas = false;
     this.holdReverse = false;
     this.turningLeft = false;
@@ -47,7 +48,6 @@ function Car() {
                 if (levels[currentLevelIndex][indexArray] == this.startPosition) {
                     this.x = currentCol * TRACK_WIDTH + TRACK_WIDTH / 2;
                     this.y = currentRow * TRACK_HEIGHT + TRACK_HEIGHT / 2;
-                    // return;
                 }
             }
         }

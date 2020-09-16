@@ -14,9 +14,9 @@ var mouseY;
 const TEXT_COLOR = "yellow";
 
 function setupEvents() {
-    canvas.addEventListener('mousemove', updateMousePos);
     blueCar.setupInput(KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW);
     greenCar.setupInput(KEY_W, KEY_S, KEY_A, KEY_D);
+    canvas.addEventListener('mousemove', updateMousePos);
     document.addEventListener('keydown', keyPressed);
     document.addEventListener('keyup', keyReleased);
 }
