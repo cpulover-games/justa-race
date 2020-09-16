@@ -42,6 +42,7 @@
 var objTrackCol = Math.floor(obj.x / TRACK_WIDTH);
 var objTrackRow = Math.floor(obj.y / TRACK_HEIGHT);
 ```
+
      - Convert to index of the track array
 ```
 var trackIndexUnderObj = objTrackCol + objTrackRow * TRACK_COLS;
@@ -64,7 +65,7 @@ switch (trackTypeUnderObj) {
 }
 ```
    - Update speeds, states when collision
-   
+
 5. Event code [Events]
 6. Assets loading [Assets]
 7. Game/level over and game restart containing init code
