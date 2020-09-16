@@ -1,9 +1,9 @@
 # Development Process
 1. HTML template
    - Declare canvas tag 
-```
-<canvas id="gameCanvas" height="500" width="500"></canvas>
-```
+   ```
+   <canvas id="gameCanvas" height="500" width="500"></canvas>
+   ```
    - Include all JS scripts: Assets -> CommonGraphics -> Game elements -> Events -> Collisions -> Main
 
 2. Main script
@@ -38,32 +38,32 @@
 
    - Case 2: For tile/grid/track with object:
      - Get the column and row positions in the gird of the object
-```
-var objTrackCol = Math.floor(obj.x / TRACK_WIDTH);
-var objTrackRow = Math.floor(obj.y / TRACK_HEIGHT);
-```
 
-     - Convert to index of the track array
-```
-var trackIndexUnderObj = objTrackCol + objTrackRow * TRACK_COLS;
-```
+     ```
+     var objTrackCol = Math.floor(obj.x / TRACK_WIDTH);
+     var objTrackRow = Math.floor(obj.y / TRACK_HEIGHT);
+     ```
+     - Convert to index of the track array     
+     ```
+     var trackIndexUnderObj = objTrackCol + objTrackRow * TRACK_COLS;
+     ```
      - Get track type (e.g. road, tree, wall, etc.)
-```
-var trackTypeUnderObj = trackGrid[trackIndexUnderObj];
-```
+     ```
+     var trackTypeUnderObj = trackGrid[trackIndexUnderObj];
+     ```
      - Determine boundaries of the collision
-```
-objTrackCol >= 0 && objTrackCol < TRACK_COLS &&
-objTrackRow >= 0 && objTrackRow < TRACK_ROWS)
-```
+     ```
+     objTrackCol >= 0 && objTrackCol < TRACK_COLS &&
+     objTrackRow >= 0 && objTrackRow < TRACK_ROWS)
+     ```
      - Setup collision cases based on track type which the object is overlapping with
-```
-switch (trackTypeUnderObj) {
-   case TRACK_WALL:
-   case TRACK_TREE:
-   ...
-}
-```
+     ```
+     switch (trackTypeUnderObj) {
+        case TRACK_WALL:
+        case TRACK_TREE:
+        ...
+     }
+     ```
    - Update speeds, states when collision
 
 5. Event code [Events]
