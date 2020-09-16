@@ -9,12 +9,12 @@ function trackCarCollision() {
         var carTrackRow = Math.floor(car.y / TRACK_HEIGHT);
         // convert to index array with col and row
         var trackIndexUnderCar = colRowToIndexArray(carTrackCol, carTrackRow);
+        var trackTypeUnderCar = levels[currentLevelIndex][trackIndexUnderCar];
 
         // boundaries of col and row {?}
         if (carTrackCol >= 0 && carTrackCol < TRACK_COLS &&
             carTrackRow >= 0 && carTrackRow < TRACK_ROWS) {
-            var trackUnderCar = levels[currentLevelIndex][trackIndexUnderCar];
-            switch (trackUnderCar) {
+            switch (trackTypeUnderCar) {
                 // obtacle cases
                 case TRACK_WALL:
                 case TRACK_FLAG:
@@ -27,7 +27,7 @@ function trackCarCollision() {
                     car.speed *= -0.5;
                     break;
 
-                // Game over: reach the goal
+                // Level over: reach the goal
                 case TRACK_GOAL:
                     console.log(car.name + " won!");
                     currentLevelIndex++;

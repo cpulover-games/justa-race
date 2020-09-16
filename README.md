@@ -31,17 +31,49 @@
      - Update element position
      - Set boundations (collision with big frame)
 4. Collision code (interval) [Collisions]
-   - Determine edge coordinates of each element
-   - Compare coordinates (collision happens when element coordinates overlap)
+
+   - Case 1: For object/element with object/element
+     - Determine edge coordinates of each element
+     - Compare coordinates (collision happens when element coordinates overlap)
+
+   - Case 2: For tile/grid/track with object:
+     - Get the column and row positions in the gird of the object
+```
+var objTrackCol = Math.floor(obj.x / TRACK_WIDTH);
+var objTrackRow = Math.floor(obj.y / TRACK_HEIGHT);
+```
+     - Convert to index of the track array
+```
+var trackIndexUnderObj = objTrackCol + objTrackRow * TRACK_COLS;
+```
+     - Get track type (e.g. road, tree, wall, etc.)
+```
+var trackTypeUnderObj = trackGrid[trackIndexUnderObj];
+```
+     - Determine boundaries of the collision
+```
+objTrackCol >= 0 && objTrackCol < TRACK_COLS &&
+objTrackRow >= 0 && objTrackRow < TRACK_ROWS)
+```
+     - Setup collision cases based on track type which the object is overlapping with
+```
+switch (trackTypeUnderObj) {
+   case TRACK_WALL:
+   case TRACK_TREE:
+   ...
+}
+```
    - Update speeds, states when collision
+   
 5. Event code [Events]
 6. Assets loading [Assets]
-7. Game over and game restart containing init code
+7. Game/level over and game restart containing init code
 
 # Notes and Tips
 - [Event] Use preventDefault() to prevent scrolling page in ```keydown``` event
 - [Refactor] Create drawing helpers (this utility file could be used for many projects) [CommonGraphics]
 - [Event] Get JS key codes from this [link](https://keycode.info/)
+
 
 
 
